@@ -24,7 +24,7 @@ RUN \
 		php5-imagick \
         php5-mcrypt \
         php5-curl \
-        php5-memcache \
+        php5-memcached \
         php5-xsl \
         php5-xdebug \
         php5-intl \
@@ -75,7 +75,11 @@ RUN \
     && rm /etc/apache2/mods-enabled/* \
     && a2enmod mpm_prefork rewrite php5 env dir auth_basic authn_file authz_user authz_host access_compat \
     && rm /etc/apache2/sites-enabled/000-default.conf \
-    && rm /var/run/newrelic-daemon.pid
+    && rm /var/run/newrelic-daemon.pid \
+    && echo "xdebug.remote_enable=on" >> /etc/php5/cli/conf.d/20-xdebug.ini \
+    && echo "xdebug.remote_port=9005" >> /etc/php5/cli/conf.d/20-xdebug.ini \
+    && echo "xdebug.remote_host=host.docker.internal" >> /etc/php5/cli/conf.d/20-xdebug.ini \
+    && echo "xdebug.remote_autostart=1" >> /etc/php5/cli/conf.d/20-xdebug.ini
 
 COPY Rediska-0.5.10.tgz /tmp/Rediska-0.5.10.tar.gz
 RUN pear install /tmp/Rediska-0.5.10.tar.gz \
